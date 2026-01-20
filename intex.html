@@ -2,16 +2,109 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Первый сайт</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Портфолио видеомонтажёра и специалиста по цифровому контенту и ИИ-инструментам. Видео, дизайн, практичные решения для бизнеса.">
+  <title>Акматов Анарбек — Видео • Дизайн • ИИ</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="page">
+    <header class="site-header">
+      <div class="logo">AA</div>
+      <nav class="nav">
+        <a href="#about">Обо мне</a>
+        <a href="#works">Работы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+      <a class="button button--ghost" href="#contacts">Связаться</a>
+    </header>
 
-  <div class="card">
-    <h1>Сула и Даня ван лав</h1>
-    <p>Мини-сайт. Первый день. Первый шаг.</p>
-    <a href="#" class="btn">Написать</a>
+    <main>
+      <section class="hero" id="about">
+        <p class="eyebrow">Портфолио фрилансера</p>
+        <h1>Акматов Анарбек</h1>
+        <p class="tagline">Видео • Дизайн • ИИ • Практичные решения для бизнеса</p>
+        <div class="about">
+          <p>Я создаю видеоконтент и цифровые решения с фокусом на результат и продажи.<br>
+            Работаю с видео, монтажом, визуальной подачей и современными ИИ-инструментами.</p>
+          <p>Моя цель — не просто красиво, а эффективно:<br>
+            чёткая подача, сильный визуал и польза для бизнеса.</p>
+          <p>Основные заказы выполняю через платформу Kwork,<br>
+            где вы можете безопасно оформить заказ и посмотреть отзывы.</p>
+        </div>
+        <div class="cta-row">
+          <a class="button button--primary" href="https://kwork.ru" target="_blank" rel="noreferrer">Заказать на Kwork</a>
+          <span class="note">Быстро, прозрачно, с гарантией платформы.</span>
+        </div>
+      </section>
+
+      <section class="works" id="works">
+        <div class="section-header">
+          <h2>Мои работы</h2>
+          <p>Ниже представлены реальные видео-проекты.<br>
+            Монтаж, подача, визуальный стиль — всё сделано мной.</p>
+        </div>
+        <div class="video-grid">
+          <article class="video-card">
+            <video controls preload="metadata">
+              <source src="videos/project-01.mp4" type="video/mp4">
+            </video>
+            <div class="video-meta">
+              <h3>Бизнес-ролик для локального бренда</h3>
+              <span>2024</span>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata">
+              <source src="videos/project-02.mp4" type="video/mp4">
+            </video>
+            <div class="video-meta">
+              <h3>Продуктовый тизер в вертикальном формате</h3>
+              <span>2023</span>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata">
+              <source src="videos/project-03.mp4" type="video/mp4">
+            </video>
+            <div class="video-meta">
+              <h3>Имиджевое видео для эксперта</h3>
+              <span>2023</span>
+            </div>
+          </article>
+          <article class="video-card">
+            <video controls preload="metadata">
+              <source src="videos/project-04.mp4" type="video/mp4">
+            </video>
+            <div class="video-meta">
+              <h3>AI-обзор инструментов для маркетинга</h3>
+              <span>2022</span>
+            </div>
+          </article>
+        </div>
+        <div class="cta-row">
+          <p class="note">Полный список услуг и цены доступны на моём профиле Kwork.</p>
+          <a class="button button--primary" href="https://kwork.ru" target="_blank" rel="noreferrer">Перейти на Kwork и заказать</a>
+        </div>
+      </section>
+
+      <section class="contacts" id="contacts">
+        <div class="section-header">
+          <h2>Связаться со мной</h2>
+          <p>Для заказов и сотрудничества удобнее всего использовать Kwork.<br>
+            Для быстрых вопросов — напишите напрямую.</p>
+        </div>
+        <div class="contact-buttons">
+          <a class="button button--ghost" href="https://t.me/username" target="_blank" rel="noreferrer">Telegram</a>
+          <a class="button button--ghost" href="mailto:hello@example.com">Email</a>
+          <a class="button button--primary" href="https://kwork.ru" target="_blank" rel="noreferrer">Kwork</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Основная платформа для заказов: Kwork</p>
+    </footer>
   </div>
-
 </body>
 </html>

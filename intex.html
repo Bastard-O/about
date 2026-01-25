@@ -1,17 +1,559 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <title>Первый сайт</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Discipline Sheet</title>
+    <style>
+      :root {
+        --bg: #f4f6f9;
+        --panel: #ffffff;
+        --text: #1f2933;
+        --muted: #6b7280;
+        --accent: #2563eb;
+        --accent-soft: rgba(37, 99, 235, 0.12);
+        --border: #d9dee7;
+        --disabled: #edf0f5;
+        --disabled-text: #a3aab4;
+        --complete: #22c55e;
+      }
 
-  <div class="card">
-    <h1>Сула и Даня ван лав</h1>
-    <p>Мини-сайт. Первый день. Первый шаг.</p>
-    <a href="#" class="btn">Написать</a>
-  </div>
+      * {
+        box-sizing: border-box;
+      }
 
-</body>
+      body {
+        margin: 0;
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+      }
+
+      .app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 24px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .title-block h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+      }
+
+      .title-block p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .header-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .header-controls button {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text);
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .header-controls button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      .summary {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 200px;
+      }
+
+      .summary-text {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .summary-track {
+        width: 220px;
+        max-width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: #e3e8f0;
+        overflow: hidden;
+      }
+
+      .summary-fill {
+        height: 100%;
+        width: 0;
+        background: var(--complete);
+        transition: width 0.2s ease;
+      }
+
+      main {
+        flex: 1;
+        padding: 24px;
+      }
+
+      .weeks-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .week-panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        aspect-ratio: 1 / 1;
+        min-height: 320px;
+      }
+
+      .week-panel.small {
+        aspect-ratio: auto;
+        min-height: 240px;
+      }
+
+      .week-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .week-header h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .week-header span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .week-progress {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .week-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      .week-table th,
+      .week-table td {
+        border: 1px solid var(--border);
+        padding: 6px 4px;
+        text-align: center;
+      }
+
+      .week-table th:first-child,
+      .week-table td:first-child {
+        text-align: left;
+        font-weight: 600;
+        background: #f8fafc;
+        min-width: 90px;
+      }
+
+      .week-table th {
+        font-weight: 600;
+        color: var(--muted);
+        background: #f3f6fb;
+      }
+
+      .cell-disabled {
+        background: var(--disabled);
+        color: var(--disabled-text);
+      }
+
+      .cell-complete {
+        background: var(--accent-soft);
+      }
+
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+
+      input[type="checkbox"]:disabled {
+        cursor: not-allowed;
+      }
+
+      .week-5 {
+        margin-top: 20px;
+        display: none;
+      }
+
+      .week-5.visible {
+        display: block;
+      }
+
+      @media (max-width: 1000px) {
+        .weeks-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .week-panel {
+          aspect-ratio: auto;
+          min-height: auto;
+        }
+      }
+
+      @media (max-width: 600px) {
+        header {
+          padding: 16px;
+        }
+
+        main {
+          padding: 16px;
+        }
+
+        .summary-track {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="title-block">
+          <h1>Discipline Sheet</h1>
+          <p id="monthLabel"></p>
+        </div>
+        <div class="header-controls">
+          <button type="button" id="prevMonth">Prev Month</button>
+          <button type="button" id="nextMonth">Next Month</button>
+          <button type="button" id="resetMonth" class="primary">
+            Reset month
+          </button>
+        </div>
+        <div class="summary">
+          <div class="summary-text" id="summaryText">Completed: 0 / 0</div>
+          <div class="summary-track">
+            <div class="summary-fill" id="summaryFill"></div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="weeks-grid" id="weeksGrid"></section>
+        <section class="week-5" id="week5"></section>
+      </main>
+    </div>
+
+    <script>
+      const habits = [
+        "Teeth (Brush teeth)",
+        "Workout",
+        "Deep Work",
+        "Python",
+        "Money",
+      ];
+      const storageKey = "discipline-sheet";
+
+      const monthLabel = document.getElementById("monthLabel");
+      const summaryText = document.getElementById("summaryText");
+      const summaryFill = document.getElementById("summaryFill");
+      const weeksGrid = document.getElementById("weeksGrid");
+      const week5 = document.getElementById("week5");
+
+      const prevMonthButton = document.getElementById("prevMonth");
+      const nextMonthButton = document.getElementById("nextMonth");
+      const resetMonthButton = document.getElementById("resetMonth");
+
+      const today = new Date();
+      let viewYear = today.getFullYear();
+      let viewMonth = today.getMonth();
+
+      const getKey = (date) => date.toISOString().slice(0, 10);
+
+      function loadState() {
+        return JSON.parse(localStorage.getItem(storageKey) || "{}");
+      }
+
+      function saveState(state) {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+      }
+
+      function buildMonthModel(year, month) {
+        const firstOfMonth = new Date(year, month, 1);
+        const lastOfMonth = new Date(year, month + 1, 0);
+        const monthName = firstOfMonth.toLocaleDateString(undefined, {
+          month: "long",
+          year: "numeric",
+        });
+
+        const mondayIndex = (firstOfMonth.getDay() + 6) % 7;
+        const gridStart = new Date(firstOfMonth);
+        gridStart.setDate(firstOfMonth.getDate() - mondayIndex);
+
+        const weeks = [];
+        let cursor = new Date(gridStart);
+        while (cursor <= lastOfMonth || weeks.length < 4) {
+          const week = [];
+          for (let i = 0; i < 7; i += 1) {
+            week.push(new Date(cursor));
+            cursor.setDate(cursor.getDate() + 1);
+          }
+          weeks.push(week);
+        }
+
+        return { monthName, weeks };
+      }
+
+      function clearMonth(state, year, month) {
+        const keys = Object.keys(state);
+        keys.forEach((key) => {
+          const date = new Date(key);
+          if (date.getFullYear() === year && date.getMonth() === month) {
+            delete state[key];
+          }
+        });
+      }
+
+      function calculateSummary(state, weeks, year, month) {
+        let completed = 0;
+        let total = 0;
+
+        weeks.forEach((week) => {
+          week.forEach((date) => {
+            const isCurrentMonth =
+              date.getFullYear() === year && date.getMonth() === month;
+            if (!isCurrentMonth) {
+              return;
+            }
+            total += habits.length;
+            const day = state[getKey(date)] || {};
+            habits.forEach((habit) => {
+              if (day[habit]) {
+                completed += 1;
+              }
+            });
+          });
+        });
+
+        return { completed, total };
+      }
+
+      function buildWeekPanel(week, index, state, year, month) {
+        const panel = document.createElement("div");
+        panel.className = "week-panel";
+
+        const header = document.createElement("div");
+        header.className = "week-header";
+
+        const title = document.createElement("h2");
+        title.textContent = `Week ${index + 1}`;
+
+        const rangeLabel = document.createElement("span");
+        const startDate = week[0];
+        const endDate = week[6];
+        rangeLabel.textContent = `${startDate.getMonth() + 1}/${startDate.getDate()} - ${
+          endDate.getMonth() + 1
+        }/${endDate.getDate()}`;
+
+        header.appendChild(title);
+        header.appendChild(rangeLabel);
+
+        const progress = document.createElement("div");
+        progress.className = "week-progress";
+
+        let weekCompleted = 0;
+        let weekTotal = 0;
+
+        week.forEach((date) => {
+          const isCurrentMonth =
+            date.getFullYear() === year && date.getMonth() === month;
+          if (isCurrentMonth) {
+            weekTotal += habits.length;
+            const day = state[getKey(date)] || {};
+            habits.forEach((habit) => {
+              if (day[habit]) {
+                weekCompleted += 1;
+              }
+            });
+          }
+        });
+
+        progress.textContent = `Completed: ${weekCompleted} / ${weekTotal}`;
+
+        const table = document.createElement("table");
+        table.className = "week-table";
+
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        const habitHead = document.createElement("th");
+        habitHead.textContent = "Habit";
+        headRow.appendChild(habitHead);
+
+        week.forEach((date) => {
+          const th = document.createElement("th");
+          th.textContent = `${date.toLocaleDateString(undefined, {
+            weekday: "short",
+          })} ${date.getDate()}`;
+          headRow.appendChild(th);
+        });
+
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+
+        habits.forEach((habit) => {
+          const row = document.createElement("tr");
+          const habitCell = document.createElement("td");
+          habitCell.textContent = habit;
+          row.appendChild(habitCell);
+
+          week.forEach((date) => {
+            const cell = document.createElement("td");
+            const isCurrentMonth =
+              date.getFullYear() === year && date.getMonth() === month;
+            if (!isCurrentMonth) {
+              cell.className = "cell-disabled";
+              row.appendChild(cell);
+              return;
+            }
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            const key = getKey(date);
+            state[key] = state[key] || {};
+            checkbox.checked = Boolean(state[key][habit]);
+            if (checkbox.checked) {
+              cell.classList.add("cell-complete");
+            }
+
+            checkbox.addEventListener("change", () => {
+              state[key][habit] = checkbox.checked;
+              cell.classList.toggle("cell-complete", checkbox.checked);
+              saveState(state);
+              render();
+            });
+
+            cell.appendChild(checkbox);
+            row.appendChild(cell);
+          });
+
+          tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+
+        panel.appendChild(header);
+        panel.appendChild(progress);
+        panel.appendChild(table);
+
+        return panel;
+      }
+
+      function renderHeader(monthName, summary) {
+        monthLabel.textContent = monthName;
+        summaryText.textContent = `Completed: ${summary.completed} / ${summary.total}`;
+        const percent =
+          summary.total === 0
+            ? 0
+            : Math.round((summary.completed / summary.total) * 100);
+        summaryFill.style.width = `${percent}%`;
+      }
+
+      function renderWeeks(weeks, state, year, month) {
+        weeksGrid.innerHTML = "";
+        week5.innerHTML = "";
+        week5.classList.remove("visible");
+
+        const primaryWeeks = weeks.slice(0, 4);
+        primaryWeeks.forEach((week, index) => {
+          weeksGrid.appendChild(buildWeekPanel(week, index, state, year, month));
+        });
+
+        if (weeks.length > 4) {
+          const extraWeeks = weeks.slice(4);
+          week5.classList.add("visible");
+          extraWeeks.forEach((week, index) => {
+            const panel = buildWeekPanel(week, index + 4, state, year, month);
+            panel.classList.add("small");
+            week5.appendChild(panel);
+          });
+        }
+      }
+
+      function render() {
+        const state = loadState();
+        const { monthName, weeks } = buildMonthModel(viewYear, viewMonth);
+        const summary = calculateSummary(state, weeks, viewYear, viewMonth);
+
+        renderHeader(monthName, summary);
+        renderWeeks(weeks, state, viewYear, viewMonth);
+      }
+
+      prevMonthButton.addEventListener("click", () => {
+        viewMonth -= 1;
+        if (viewMonth < 0) {
+          viewMonth = 11;
+          viewYear -= 1;
+        }
+        render();
+      });
+
+      nextMonthButton.addEventListener("click", () => {
+        viewMonth += 1;
+        if (viewMonth > 11) {
+          viewMonth = 0;
+          viewYear += 1;
+        }
+        render();
+      });
+
+      resetMonthButton.addEventListener("click", () => {
+        const confirmReset = window.confirm(
+          "Reset all habit checks for this month?"
+        );
+        if (!confirmReset) {
+          return;
+        }
+        const state = loadState();
+        clearMonth(state, viewYear, viewMonth);
+        saveState(state);
+        render();
+      });
+
+      render();
+    </script>
+  </body>
 </html>
